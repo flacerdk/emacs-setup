@@ -22,6 +22,7 @@
  '(python-shell-completion-native-disabled-interpreters (quote ("ipython" "pypy")))
  '(safe-local-variable-values (quote ((TeX-engine . xelatex)))))
 
+
 (require 'package)
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/")
@@ -30,8 +31,15 @@
 	     '("org" . "http://orgmode.org/elpa/") t)
 (package-initialize)
 
-(eval-when-compile
-  (require 'use-package))
+(setenv "PATH"
+        (concat (getenv "PATH")
+                ":/Library/TeX/texbin:/Users/felipe/Library/Python/2.7/bin:/usr/local/bin"))
+
+(setq exec-path
+      (append exec-path
+              '("/Library/TeX/texbin" "/Users/felipe/Library/Python/2.7/bin" "/usr/local/bin")))
+
+(setenv "WORKON_HOME" "/opt/anaconda/envs")
 
 (require 'iso-transl)
 (transient-mark-mode 1)
@@ -68,11 +76,13 @@
 (add-to-list 'default-frame-alist
              '(font . "Monaco-10:weight=bold"))
 
+(eval-when-compile
+  (require 'use-package))
+
 (require 'org-setup)
 
 (use-package rust-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+  :mode "\\.rs\\'"
   :config
   (add-hook 'rust-mode-hook #'electric-pair-mode)
   (add-hook 'rust-mode-hook #'auto-complete-mode))
@@ -84,23 +94,22 @@
   (desktop-save-mode 1))
 
 (use-package LaTeX-mode
+  :commands (turn-on-reftex TeX-PDF-mode LaTeX-math-mode TeX-toggle-escape)
   :config
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (turn-on-auto-fill)
-              (visual-line-mode +1)
-              (turn-on-reftex)
-              (TeX-PDF-mode +1)
-              (add-to-list 'TeX-command-list
-                           '("LuaLaTeX" "lualatex %t" TeX-run-command t t :help "Run LuaLaTeX") t)
-              (setq-default LaTeX-math-abbrev-prefix "#")
-              (LaTeX-math-mode +1)
-              (setq reftex-plug-into-auctex t)))
+  (turn-on-auto-fill)
+  (visual-line-mode +1)
+  (turn-on-reftex)
+  (TeX-PDF-mode +1)
+  (add-to-list 'TeX-command-list
+               '("LuaLaTeX" "lualatex %t" TeX-run-command t t :help "Run LuaLaTeX") t)
+  (setq-default LaTeX-math-abbrev-prefix "#")
+  (LaTeX-math-mode +1)
+  (setq reftex-plug-into-auctex t)
   :bind ("C-c C-t x" . TeX-toggle-escape))
 
 (use-package markdown-mode
   :config
-  (require 'markdown-setup)
+  (use-package markdown-setup)
   :bind
   ("C-c C-c k" . as/markdown-region-to-latex))
 
@@ -118,26 +127,17 @@
   :bind
   ("C-x g" . magit-status))
 
-(setenv "PATH"
-        (concat (getenv "PATH")
-                ":/Library/TeX/texbin:/Users/felipe/Library/Python/2.7/bin:/usr/local/bin"))
-
-(setq exec-path
-      (append exec-path
-              '("/Library/TeX/texbin" "/Users/felipe/Library/Python/2.7/bin" "/usr/local/bin")))
-
-(setenv "WORKON_HOME" "/opt/anaconda/envs")
-
 (use-package elpy
   :init
   (elpy-enable)
   (when (executable-find "ipython")
-    (elpy-use-ipython)))
+    (elpy-use-ipython))
+  (setq python-indent-offset 4))
 
-(add-to-list 'load-path "~/.emacs.d/lisp/emacs-async")
-(add-to-list 'load-path "~/.emacs.d/lisp/helm")
-(use-package helm-config)
-(use-package helm-setup)
+(use-package helm-config
+  :load-path ("lisp/emacs-async/" "lisp/helm/")
+  :config
+  (use-package helm-setup))
 
 (use-package auto-complete-config
   :config
