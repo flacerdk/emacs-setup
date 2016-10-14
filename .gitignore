@@ -1,0 +1,12 @@
+session.*
+.emacs.*
+*~
+lisp/auctex/
+lisp/emacs-async/
+lisp/helm/
+tramp
+url/
+auto-save-list/
+ac-comphist.dat
+elpa/
+abbrev_defs

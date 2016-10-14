@@ -7,6 +7,9 @@
  ;; If there is more than one, they won't work right.
  '(LaTeX-math-abbrev-prefix "#")
  '(magit-branch-arguments nil)
+ '(org-agenda-files
+   (quote
+    ("~/Dropbox/org/servo.org" "~/Dropbox/org/work.org" "~/Dropbox/org/danish.org" "~/Dropbox/org/prog.org" "~/Dropbox/org/smoke-signal.org" "/home/felipe/Dropbox/org/notes.org" "/home/felipe/Dropbox/org/todo.org")))
  '(org-file-apps
    (quote
     ((auto-mode . emacs)
@@ -15,7 +18,7 @@
      ("\\.pdf\\'" . "evince %s"))))
  '(package-selected-packages
    (quote
-    (use-package js2-mode ac-emmet emmet-mode react-snippets web-mode auctex auctex-latexmk auctex-lua helm-projectile markdown-mode haskell-mode cargo rust-mode rustfmt magit python readline-complete yasnippet elpy ahungry-theme)))
+    (paredit use-package js2-mode ac-emmet emmet-mode react-snippets web-mode auctex auctex-latexmk auctex-lua helm-projectile markdown-mode haskell-mode cargo rust-mode rustfmt magit python readline-complete yasnippet elpy ahungry-theme)))
  '(python-shell-completion-native-disabled-interpreters (quote ("ipython" "pypy")))
  '(safe-local-variable-values (quote ((TeX-engine . xelatex)))))
 
@@ -59,6 +62,7 @@
     (scroll-bar-mode -1))
 (if (featurep 'tooltip)
     (tooltip-mode -1))
+(electric-pair-mode +1)
 
 (load-theme 'ahungry t)
 (add-to-list 'default-frame-alist
@@ -68,7 +72,10 @@
 
 (use-package rust-mode
   :init
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode)))
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+  :config
+  (add-hook 'rust-mode-hook #'electric-pair-mode)
+  (add-hook 'rust-mode-hook #'auto-complete-mode))
 
 (use-package desktop
   :config
@@ -93,8 +100,10 @@
 
 (use-package markdown-mode
   :config
-  (add-hook 'markdown-mode-hook
-            (lambda () (turn-on-auto-fill))))
+  (require 'markdown-setup)
+  :bind
+  ("C-c C-c k" . as/markdown-region-to-latex))
+
 
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "C-w") 'backward-kill-word)
@@ -120,7 +129,7 @@
 (setenv "WORKON_HOME" "/opt/anaconda/envs")
 
 (use-package elpy
-  :config
+  :init
   (elpy-enable)
   (when (executable-find "ipython")
     (elpy-use-ipython)))
@@ -133,6 +142,14 @@
 (use-package auto-complete-config
   :config
   (ac-config-default)
-  (add-to-list 'ac-modes 'web-mode))
+  (defadvice auto-complete-mode (around disable-auto-complete-for-python)
+    (unless (eq major-mode 'python-mode) ad-do-it))
+  (ad-activate 'auto-complete-mode))
 
 (require 'snippet-setup)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

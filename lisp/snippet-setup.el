@@ -24,6 +24,7 @@
   :init
   (add-hook 'js-mode-hook 'yas-minor-mode)
   (add-hook 'sgml-mode-hook 'yas-minor-mode)
+  (add-hook 'rust-mode-hook 'yas-minor-mode)
   :config
 ;  (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-reload-all)

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: match
+# key: match
+# --
+match $1 {
+    $2
+    _ => ${3:expression},
+}
+$0
