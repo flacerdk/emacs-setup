@@ -18,7 +18,7 @@
      ("\\.pdf\\'" . "evince %s"))))
  '(package-selected-packages
    (quote
-    (paredit use-package js2-mode ac-emmet emmet-mode react-snippets web-mode auctex auctex-latexmk auctex-lua helm-projectile markdown-mode haskell-mode cargo rust-mode rustfmt magit python readline-complete yasnippet elpy ahungry-theme)))
+    (flycheck paredit use-package js2-mode ac-emmet emmet-mode react-snippets web-mode auctex auctex-latexmk auctex-lua helm-projectile markdown-mode haskell-mode cargo rust-mode rustfmt magit python readline-complete yasnippet elpy ahungry-theme)))
  '(python-shell-completion-native-disabled-interpreters (quote ("ipython" "pypy")))
  '(safe-local-variable-values (quote ((TeX-engine . xelatex)))))
 
@@ -80,6 +80,7 @@
   (require 'use-package))
 
 (require 'org-setup)
+(require 'snippet-setup)
 
 (use-package rust-mode
   :mode "\\.rs\\'"
@@ -131,7 +132,10 @@
   :init
   (elpy-enable)
   (when (executable-find "ipython")
-    (elpy-use-ipython))
+    (elpy-use-ipython)
+    (setq python-shell-interpreter "ipython"
+          python-shell-interpreter-args "--simple-prompt -i")
+    (setq ansi-color-for-comint-mode t))
   (setq python-indent-offset 4))
 
 (use-package helm-config
@@ -146,7 +150,19 @@
     (unless (eq major-mode 'python-mode) ad-do-it))
   (ad-activate 'auto-complete-mode))
 
-(require 'snippet-setup)
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :config
+  (setq js-indent-level 2)
+  (setq js2-basic-offset 2))
+
+(use-package flycheck
+  :config
+  (global-flycheck-mode)
+  (add-to-list 'flycheck-disabled-checkers
+        'javascript-jshint)
+  (flycheck-add-mode 'javascript-eslint 'web-mode))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,10 +1,7 @@
-(provide 'snippet-setup)
-
 (use-package emmet-mode
   :defer t
   :init
   (add-hook 'css-mode-hook 'emmet-mode)
-  (add-hook 'web-mode-hook 'emmet-mode)
   :config
   (setq-default emmet-move-cursor-between-quote t)
   (unbind-key "<C-return>" emmet-mode-keymap)
@@ -22,7 +19,7 @@
 (use-package yasnippet
   :defer t
   :init
-  (add-hook 'js-mode-hook 'yas-minor-mode)
+  (add-hook 'web-mode-hook 'yas-minor-mode)
   (add-hook 'sgml-mode-hook 'yas-minor-mode)
   (add-hook 'rust-mode-hook 'yas-minor-mode)
   :config
@@ -32,11 +29,11 @@
   (unbind-key "<tab>" yas-minor-mode-map))
 
 (use-package web-mode
+  :mode ("\\.jsx\\'" "jsx/.*\\.js[x]?\\'" "\\.html?\\'")
   :config
   (setq web-mode-ac-sources-alist
         '(("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
           ("css" . (ac-source-css-property ac-source-emmet-css-snippets))))
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-hook 'web-mode-before-auto-complete-hooks
             '(lambda ()
                (ac-emmet-html-setup)
@@ -44,5 +41,11 @@
                       (web-mode-language-at-pos)))
                  (if (string= web-mode-cur-language "css")
                      (setq emmet-use-css-transform t)
-                   (setq emmet-use-css-transform nil))))))
+                   (setq emmet-use-css-transform nil)))))
+  (defadvice web-mode-highlight-part (around tweak-jsx activate)
+  (if (equal web-mode-content-type "jsx")
+    (let ((web-mode-enable-part-face nil))
+      ad-do-it)
+    ad-do-it)))
 
+(provide 'snippet-setup)
