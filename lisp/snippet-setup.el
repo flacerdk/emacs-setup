@@ -34,6 +34,9 @@
   (setq web-mode-ac-sources-alist
         '(("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
           ("css" . (ac-source-css-property ac-source-emmet-css-snippets))))
+  (setq-default web-mode-markup-indent-offset 2)
+  (setq-default web-mode-code-indent-offset 2)
+  (yas-activate-extra-mode 'js-mode)
   (add-hook 'web-mode-before-auto-complete-hooks
             '(lambda ()
                (ac-emmet-html-setup)

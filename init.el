@@ -9,7 +9,7 @@
  '(magit-branch-arguments nil)
  '(org-agenda-files
    (quote
-    ("~/Dropbox/org/servo.org" "~/Dropbox/org/work.org" "~/Dropbox/org/danish.org" "~/Dropbox/org/prog.org" "~/Dropbox/org/smoke-signal.org" "/home/felipe/Dropbox/org/notes.org" "/home/felipe/Dropbox/org/todo.org")))
+    ("~/Dropbox/org/smoke-signal.org" "~/Dropbox/org/work.org" "~/Dropbox/org/danish.org" "~/Dropbox/org/prog.org" "/home/felipe/Dropbox/org/notes.org" "/home/felipe/Dropbox/org/todo.org")))
  '(org-file-apps
    (quote
     ((auto-mode . emacs)
@@ -18,7 +18,7 @@
      ("\\.pdf\\'" . "evince %s"))))
  '(package-selected-packages
    (quote
-    (flycheck paredit use-package js2-mode ac-emmet emmet-mode react-snippets web-mode auctex auctex-latexmk auctex-lua helm-projectile markdown-mode haskell-mode cargo rust-mode rustfmt magit python readline-complete yasnippet elpy ahungry-theme)))
+    (omnisharp flycheck paredit use-package js2-mode ac-emmet emmet-mode web-mode auctex auctex-latexmk auctex-lua helm-projectile markdown-mode haskell-mode cargo rust-mode rustfmt magit python readline-complete yasnippet elpy ahungry-theme)))
  '(python-shell-completion-native-disabled-interpreters (quote ("ipython" "pypy")))
  '(safe-local-variable-values (quote ((TeX-engine . xelatex)))))
 
@@ -131,11 +131,6 @@
 (use-package elpy
   :init
   (elpy-enable)
-  (when (executable-find "ipython")
-    (elpy-use-ipython)
-    (setq python-shell-interpreter "ipython"
-          python-shell-interpreter-args "--simple-prompt -i")
-    (setq ansi-color-for-comint-mode t))
   (setq python-indent-offset 4))
 
 (use-package helm-config
