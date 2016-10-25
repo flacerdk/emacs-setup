@@ -37,7 +37,7 @@
 
 (setq exec-path
       (append exec-path
-              '("/Library/TeX/texbin" "/Users/felipe/Library/Python/2.7/bin" "/usr/local/bin")))
+              '("~/.local/bin" "/Library/TeX/texbin" "/Users/felipe/Library/Python/2.7/bin" "/usr/local/bin")))
 
 (setenv "WORKON_HOME" "/opt/anaconda/envs")
 
