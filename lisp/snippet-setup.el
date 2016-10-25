@@ -28,6 +28,9 @@
   (unbind-key "TAB" yas-minor-mode-map)
   (unbind-key "<tab>" yas-minor-mode-map))
 
+(use-package es6-snippets
+  :load-path ("lisp/es6-snippets"))
+
 (use-package web-mode
   :mode ("\\.jsx\\'" "jsx/.*\\.js[x]?\\'" "\\.html?\\'")
   :config
